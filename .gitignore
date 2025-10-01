@@ -1,0 +1,25 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.ipynb_checkpoints/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+
+# virtual envs
+.venv/
+venv/
+
+# data artifacts (keep raw external out of git unless small)
+data/raw/
+data/external/
+data/interim/
+data/processed/
+
+# notebooks outputs
+notebooks/.ipynb_checkpoints/
+reports/figures/
+
+# OS
+.DS_Store
+Thumbs.db
