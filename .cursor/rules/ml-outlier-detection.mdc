@@ -68,6 +68,8 @@ You will follow this structured workflow for every task:
     -   **Timeout Enforcement:** Long-running commands must have a timeout to prevent hanging sessions.
     -   **Non-Interactive Execution:** Use flags to prevent interactive prompts where safe.
     -   **Fail-Fast Semantics:** Scripts should be configured to exit immediately on error.
+    -   **Quote Version Specifiers in Shell:** When invoking package managers (e.g., pip) with version constraints containing `>` or `<`, always quote the requirement to avoid shell redirection creating stray files. Example: `python -m pip install 'numpy>=1.24'` (NOT `numpy>=1.24`). Prefer `-r requirements.txt` over inline specs.
+    -   **Brace Expansion Discipline:** Do not put brace expansions inside quotes (which disable expansion). For complex directory scaffolds, prefer explicit repeated `mkdir -p` calls over clever one-liners. Dry-run expansions with `printf`/`echo` when uncertain.
 
 ### 3 · VERIFICATION & AUTONOMOUS CORRECTION
 -   Execute all relevant quality gates (unit tests, integration tests, linters).
@@ -75,14 +77,32 @@ You will follow this structured workflow for every task:
 -   After any modification, **reread the altered artifacts** to verify the change was applied correctly and had no unintended side effects.
 -   Perform end-to-end verification of the primary user workflow to ensure no regressions were introduced.
 
-### 4 · REPORTING & ARTIFACT GOVERNANCE
+### 4 · SECRET HYGIENE & PUSH PROTECTION
+-   Establish `.gitignore` before first commit; ignore common secrets and large artifacts: `data/*`, `.env*`, `token*`, cache dirs.
+-   Never commit secrets. If push protection (e.g., GH013) blocks a push:
+    -   Create a safety branch.
+    -   Remove secrets from history with `git filter-repo --path <secret-file> --invert-paths`.
+    -   Re-add `origin` if removed and force-push the cleaned branch.
+    -   Rotate any exposed credentials.
+
+### 5 · REPORTING & ARTIFACT GOVERNANCE
 -   **Ephemeral Narratives:** All transient information—your plan, thought process, logs, and summaries—**must** remain in the chat.
 -   **FORBIDDEN:** Creating unsolicited files (`.md`, notes, etc.) to store your analysis. The chat log is the single source of truth for the session.
 -   **Communication Legend:** Use a clear, scannable legend (`✅` for success, `⚠️` for self-corrected issues, `🚧` for blockers) to report status.
+-   **Verification Before Cleanup:** Before deleting any temporary helper scripts, verification tools, or diagnostic artifacts, perform comprehensive validation of the final deliverable state. Sequence: Create → Execute → Verify → Audit → Delete. Premature cleanup eliminates diagnostic instruments that may be needed if issues are discovered.
 
-### 5 · DOCTRINE EVOLUTION (CONTINUOUS LEARNING)
+### 6 · DOCTRINE EVOLUTION (CONTINUOUS LEARNING)
 -   At the end of a session (when requested via a `retro` command), you will reflect on the interaction to identify durable lessons.
 -   These lessons will be abstracted into universal, tool-agnostic principles and integrated back into this Doctrine, ensuring you continuously evolve.
+
+### 7 · NOTEBOOK & MODULE IMPORT DISCIPLINE
+-   Run Jupyter from the project root so project packages (e.g., `src`) are importable, or insert the project root into `sys.path` at the top of notebooks.
+-   Prefer packaging the project and `pip install -e .` for stable imports. Never import with a `.py` suffix (use `from pkg.module import name`).
+
+### 8 · NOTEBOOK MANIPULATION STRATEGY
+-   **Bulk Cell Additions:** When adding multiple cells (≥5) or complex multiline code blocks to Jupyter notebooks, prefer programmatic manipulation using the `nbformat` library over iterative cell-editing tool calls.
+-   **When to Use Programmatic Approach:** (1) Cell-editing tools fail or produce errors, (2) Adding complex functions spanning 50+ lines, (3) Need to insert cells at specific positions atomically, (4) Require version control and transparency of changes.
+-   **Implementation Pattern:** Create a temporary Python script using `nbformat.read()` and `nbformat.write()`, insert cells programmatically, validate the result, then delete the script. This approach is transparent, testable, and reliable.
 
 ---
 
@@ -90,4 +110,20 @@ You will follow this structured workflow for every task:
 
 -   Pursue holistic root-cause diagnosis; reject superficial patches.
 -   When a user provides corrective feedback, treat it as a **critical failure signal.** Stop your current approach, analyze the feedback to understand the principle you violated, and then restart your process from a new, evidence-based position.
+-   **Tool Failure Pivot Threshold:** When any tool fails **twice** consecutively with the same error on similar operations, immediately pivot to an alternative approach. Do not attempt a third time. Tool debugging is not your mission; solving the user's problem is. Document the failure pattern and the pivot strategy employed.
+
+---
+
+## D · ML/DATA SCIENCE PROJECT PROTOCOLS
+
+### 1 · TIME-SERIES ANOMALY VISUALIZATION
+-   For time-series anomaly detection projects, implement **dual-perspective visualizations**: (1) Full time-series overview with anomaly regions highlighted, (2) Zoomed close-ups on anomaly windows with temporal context margins (e.g., ±60-120 minutes).
+-   This pattern (established in research literature, e.g., Ribeiro et al., 2020) enables both macro-pattern recognition and micro-detail analysis.
+-   Use color coding to link overview regions to their corresponding zoomed views.
+
+### 2 · REAL DATA VALIDATION FOR NOTEBOOKS
+-   Before considering any ML notebook implementation complete, validate all core logic with representative samples of **real data** from the actual dataset.
+-   Create temporary verification scripts that load the dataset and test critical functions (e.g., anomaly detection, window extraction, statistical computations).
+-   Report key empirical findings as evidence of correctness: sample counts, distributions, anomaly counts, durations, edge cases discovered.
+-   This prevents "looks correct but fails in practice" scenarios common in data-dependent code.
 
