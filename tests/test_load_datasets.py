@@ -15,7 +15,7 @@ from wqdab.data import (
 def mock_dataframe():
     return pd.DataFrame({'col1': [1, 2], 'col2': [3, 4]})
 
-@patch('wqdab.data.pd.read_parquet')
+@patch('wqdab.data.data.pd.read_parquet')
 def test_load_single_dataset_2017(mock_read_parquet, mock_dataframe):
     mock_read_parquet.return_value = mock_dataframe
     train, test = load_single_dataset_2017()
@@ -23,7 +23,7 @@ def test_load_single_dataset_2017(mock_read_parquet, mock_dataframe):
     assert test.equals(mock_dataframe)
     assert mock_read_parquet.call_count == 2
 
-@patch('wqdab.data.pd.read_parquet')
+@patch('wqdab.data.data.pd.read_parquet')
 def test_load_single_dataset_2018(mock_read_parquet, mock_dataframe):
     mock_read_parquet.return_value = mock_dataframe
     train, test = load_single_dataset_2018()
@@ -31,7 +31,7 @@ def test_load_single_dataset_2018(mock_read_parquet, mock_dataframe):
     assert test.equals(mock_dataframe)
     assert mock_read_parquet.call_count == 2
 
-@patch('wqdab.data.pd.read_parquet')
+@patch('wqdab.data.data.pd.read_parquet')
 def test_load_single_dataset_2019(mock_read_parquet, mock_dataframe):
     mock_read_parquet.return_value = mock_dataframe
     train, val, test = load_single_dataset_2019()
@@ -40,7 +40,7 @@ def test_load_single_dataset_2019(mock_read_parquet, mock_dataframe):
     assert test.equals(mock_dataframe)
     assert mock_read_parquet.call_count == 3
 
-@patch('wqdab.data.pd.read_parquet')
+@patch('wqdab.data.data.pd.read_parquet')
 def test_load_temporal_drift_task(mock_read_parquet, mock_dataframe):
     mock_read_parquet.return_value = mock_dataframe
     source, target_train, target_test = load_temporal_drift_task()
@@ -49,7 +49,7 @@ def test_load_temporal_drift_task(mock_read_parquet, mock_dataframe):
     assert target_test.equals(mock_dataframe)
     assert mock_read_parquet.call_count == 4
 
-@patch('wqdab.data.pd.read_parquet')
+@patch('wqdab.data.data.pd.read_parquet')
 def test_load_domain_drift_task(mock_read_parquet, mock_dataframe):
     mock_read_parquet.return_value = mock_dataframe
     source, target_train, target_test = load_domain_drift_task()
@@ -58,7 +58,7 @@ def test_load_domain_drift_task(mock_read_parquet, mock_dataframe):
     assert target_test.equals(mock_dataframe)
     assert mock_read_parquet.call_count == 7
 
-@patch('wqdab.data.pd.read_parquet')
+@patch('wqdab.data.data.pd.read_parquet')
 def test_load_all_datasets(mock_read_parquet, mock_dataframe):
     mock_read_parquet.return_value = mock_dataframe
     results = load_all_datasets()
