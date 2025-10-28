@@ -29,13 +29,8 @@ def build_notebook() -> nbf.NotebookNode:
 
     add_py(
         nb,
-        "# Ensure project root on sys.path for `import src.*`\n"
-        "import sys\n"
-        "from pathlib import Path\n"
-        "PROJECT_ROOT = Path.cwd().parent\n"
-        "if str(PROJECT_ROOT) not in sys.path:\n"
-        "    sys.path.insert(0, str(PROJECT_ROOT))\n"
-        "print(\"sys.path bootstrapped with:\", PROJECT_ROOT)",
+        "# Package imports (wqdab installed via pip install -e .)\n"
+        "# No sys.path manipulation needed with proper package structure",
     )
 
     add_py(
@@ -46,8 +41,8 @@ def build_notebook() -> nbf.NotebookNode:
         "import numpy as np\n"
         "import seaborn as sns\n"
         "import matplotlib.pyplot as plt\n\n"
-        "from src.utils.paths import ensure_directories_exist, FIGURES_DIR\n"
-        "from src.data.loaders import load_gecco2018_csv\n\n"
+        "from wqdab.utils.paths import ensure_directories_exist, FIGURES_DIR\n"
+        "from wqdab.data.loaders import load_gecco2018_csv\n\n"
         "sns.set_theme(style=\"whitegrid\")\n"
         "plt.rcParams[\"figure.figsize\"] = (14, 5)",
     )
