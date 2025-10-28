@@ -1,12 +1,29 @@
+# Core dependencies
 numpy>=1.24
 pandas>=2.2
 scikit-learn>=1.4
 scipy>=1.13
+
+# Visualization
 matplotlib>=3.8
 seaborn>=0.13
+plotly>=5.24
+
+# Jupyter environment
 jupyterlab>=4.2
 ipywidgets>=8.1
+
+# Configuration
 pyyaml>=6.0
-plotly>=5.24
+
+# Machine Learning
+imbalanced-learn>=0.12  # RUSBoost and sampling methods
+optuna>=3.0              # Hyperparameter optimization
+tensorflow>=2.15         # Deep learning models
+prts>=0.2.0              # Time-series precision/recall metrics
+
+# Development tools
 ruff>=0.6
 black>=24.8
+pytest>=7.0
+pytest-cov>=4.0
