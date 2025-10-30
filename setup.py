@@ -23,6 +23,7 @@ setup(
     install_requires=[
         "numpy>=1.24",
         "pandas>=2.2",
+        "pyarrow>=12.0",  # Required for parquet support
         "scikit-learn>=1.4",
         "scipy>=1.13",
         "matplotlib>=3.8",
